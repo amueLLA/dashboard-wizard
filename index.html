@@ -536,57 +536,67 @@
     }
 
     async function createDashboard() {
-      updateSections();
+  updateSections();
+  
+  const btn = document.getElementById('btn-create');
+  btn.disabled = true;
+  btn.textContent = 'Creating...';
+
+  try {
+    // Generate dashboard content
+    const response = await fetch('/api/setup-wizard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      showSuccess(data.dashboard);
+    } else {
+      alert('Error: ' + data.message);
+      btn.disabled = false;
+      btn.textContent = 'Create Dashboard';
+    }
+  } catch (error) {
+    alert('Error: ' + error.message);
+    btn.disabled = false;
+    btn.textContent = 'Create Dashboard';
+  }
+}
+
+   function showSuccess(dashboard) {
+  const container = document.querySelector('.container');
+  container.innerHTML = `
+    <div class="success-message">
+      <h3>✓ Dashboard Created!</h3>
+      <p>${dashboard.dashboard_name} is ready</p>
+    </div>
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 6px;">
+      <h4 style="margin-bottom: 15px; color: #333;">Your Dashboard Details:</h4>
+      <p style="margin-bottom: 10px; color: #666;"><strong>Name:</strong> ${dashboard.dashboard_name}</p>
+      <p style="margin-bottom: 10px; color: #666;"><strong>Description:</strong> ${dashboard.dashboard_description}</p>
+      <p style="margin-bottom: 10px; color: #666;"><strong>Team Size:</strong> ${dashboard.team_size}</p>
+      <p style="margin-bottom: 20px; color: #666;"><strong>Focus:</strong> ${dashboard.primary_focus}</p>
       
-      const btn = document.getElementById('btn-create');
-      btn.disabled = true;
-      btn.textContent = 'Creating...';
-
-      try {
-        const response = await fetch('/api/setup-wizard', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          showSuccess(data.dashboard);
-        } else {
-          alert('Error: ' + data.message);
-          btn.disabled = false;
-          btn.textContent = 'Create Dashboard';
-        }
-      } catch (error) {
-        alert('Error creating dashboard: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = 'Create Dashboard';
-      }
-    }
-
-    function showSuccess(dashboard) {
-      const container = document.querySelector('.container');
-      container.innerHTML = `
-        <div class="success-message">
-          <h3>✓ Dashboard Created!</h3>
-          <p>${dashboard.dashboard_name} is ready</p>
-        </div>
-        <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 6px;">
-          <h4 style="margin-bottom: 15px; color: #333;">Your Dashboard Details:</h4>
-          <p style="margin-bottom: 10px; color: #666;"><strong>Name:</strong> ${dashboard.dashboard_name}</p>
-          <p style="margin-bottom: 10px; color: #666;"><strong>Description:</strong> ${dashboard.dashboard_description}</p>
-          <p style="margin-bottom: 10px; color: #666;"><strong>Team Size:</strong> ${dashboard.team_size}</p>
-          <p style="margin-bottom: 20px; color: #666;"><strong>Focus:</strong> ${dashboard.primary_focus}</p>
-          
-          <h4 style="margin-bottom: 10px; color: #333;">Key Metrics:</h4>
-          <ul style="margin-left: 20px; color: #666;">
-            ${dashboard.key_metrics.map(m => `<li>${m.name}</li>`).join('')}
-          </ul>
-        </div>
-        <button onclick="window.location.reload()" style="width: 100%; margin-top: 20px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Start Over</button>
-      `;
-    }
+      <h4 style="margin-bottom: 10px; color: #333;">Key Metrics:</h4>
+      <ul style="margin-left: 20px; color: #666;">
+        ${dashboard.key_metrics.map(m => `<li>${m.name}</li>`).join('')}
+      </ul>
+      
+      <h4 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Quick Start Guide:</h4>
+      <ol style="margin-left: 20px; color: #666;">
+        ${dashboard.quick_start_guide.map(step => `<li>${step}</li>`).join('')}
+      </ol>
+      
+      <p style="margin-top: 20px; color: #999; font-size: 14px;">
+        📧 Check your email for your complete dashboard template guide!
+      </p>
+    </div>
+    <button onclick="window.location.reload()" style="width: 100%; margin-top: 20px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Create Another Dashboard</button>
+  `;
+}
 
     goToStep(1);
   </script>
