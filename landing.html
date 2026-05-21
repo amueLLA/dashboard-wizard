@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Wizard - Build Your Business Dashboard in 5 Minutes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .navbar {
+      background: white;
+      padding: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .nav-button {
+      background: #667eea;
+      color: white;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .nav-button:hover {
+      background: #5568d3;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: 40px;
+      opacity: 0.95;
+    }
+
+    .cta-button {
+      background: white;
+      color: #667eea;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      margin-bottom: 50px;
+      text-align: center;
+      color: #333;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-bottom: 80px;
+    }
+
+    .benefit-card {
+      text-align: center;
+    }
+
+    .benefit-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .benefit-card h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .benefit-card p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .how-it-works {
+      background: #f8f9ff;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+    }
+
+    .step {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .step h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .step p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .use-cases {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .use-case {
+      padding: 30px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .use-case:hover {
+      border-color: #667eea;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    }
+
+    .use-case h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .use-case p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .cta-section h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .cta-section p {
+      font-size: 18px;
+      margin-bottom: 40px;
+      opacity: 0.95;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 60px 0;
+    }
+
+    .feature {
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .section h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div class="navbar">
+    <div class="navbar-content">
+      <div class="logo">📊 Dashboard Wizard</div>
+      <a href="/wizard" class="nav-button">Try Free</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Build Your Perfect Business Dashboard in 5 Minutes</h1>
+      <p>Stop using scattered spreadsheets. Get a professional, customized Notion dashboard tailored to your business type.</p>
+      <a href="/wizard" class="cta-button">Start Free →</a>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="section">
+    <h2>Why Choose Dashboard Wizard?</h2>
+    <div class="benefits">
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <h3>5-Minute Setup</h3>
+        <p>Answer 4 quick questions and your dashboard is ready to use. No complicated setup required.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🎯</div>
+        <h3>Customized for You</h3>
+        <p>We customize everything based on your business type: SaaS, E-commerce, Agency, Startup, or Non-profit.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📊</div>
+        <h3>Professional Templates</h3>
+        <p>Get pre-built databases, metrics, formulas, and views that actually work for your business.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🚀</div>
+        <h3>Start Free, Scale Later</h3>
+        <p>Completely free to try. Upgrade to premium features whenever you're ready.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📈</div>
+        <h3>Track What Matters</h3>
+        <p>Pre-configured KPIs and metrics specific to your industry. Stop guessing what to measure.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💯</div>
+        <h3>You Own It All</h3>
+        <p>It's a Notion template you fully control. No subscriptions, no lock-in, just your dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Tell Us About You</h3>
+        <p>Select your business type and team size. Takes 2 minutes.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Choose Your Sections</h3>
+        <p>Pick which dashboard features you want (metrics, pipeline, calendar, etc.)</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Dashboard Created</h3>
+        <p>Get your fully customized Notion dashboard instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Start Using It</h3>
+        <p>Import to Notion and start tracking your business metrics immediately.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It's For -->
+  <section class="section">
+    <h2>Perfect for Every Business Type</h2>
+    <div class="use-cases">
+      <div class="use-case">
+        <h3>🚀 Startups</h3>
+        <p>Track burn rate, runway, user growth, and milestone progress. Know exactly where you stand.</p>
+      </div>
+      <div class="use-case">
+        <h3>☁️ SaaS Founders</h3>
+        <p>Monitor MRR, CAC, LTV, churn rate, and customer health. All the metrics that matter.</p>
+      </div>
+      <div class="use-case">
+        <h3>🛍️ E-commerce</h3>
+        <p>Manage sales, inventory, customer behavior, and supplier tracking in one place.</p>
+      </div>
+      <div class="use-case">
+        <h3>🤝 Agencies</h3>
+        <p>Track projects, profitability, team capacity, and client relationships effortlessly.</p>
+      </div>
+      <div class="use-case">
+        <h3>❤️ Non-profits</h3>
+        <p>Monitor donations, program impact, volunteer hours, and fundraising progress.</p>
+      </div>
+      <div class="use-case">
+        <h3>⚙️ Other Businesses</h3>
+        <p>Customize a dashboard for any business type. Fully flexible and adaptable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2>What You Get</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <p><strong>Pre-built Databases</strong></p>
+        <p>Metrics, Customers, Projects, Team, and more.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📈</div>
+        <p><strong>Formulas & Views</strong></p>
+        <p>Automated calculations and organized views.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📅</div>
+        <p><strong>Calendar Integration</strong></p>
+        <p>Manage schedules and deadlines seamlessly.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔗</div>
+        <p><strong>Database Relations</strong></p>
+        <p>Connect all your data for better insights.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📋</div>
+        <p><strong>Setup Guide</strong></p>
+        <p>Step-by-step instructions to get started.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <p><strong>Free Support</strong></p>
+        <p>Questions? We're here to help.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Ready to Transform Your Dashboards?</h2>
+    <p>Create your customized business dashboard right now. It's completely free.</p>
+    <a href="/wizard" class="cta-button">Start Building →</a>
+    <p style="margin-top: 30px; font-size: 14px; opacity: 0.8;">No credit card required. Takes 5 minutes.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Dashboard Wizard. Built with ❤️</p>
+  </footer>
+</body>
+</html>

@@ -8,12 +8,16 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
 
 // API endpoints
 app.post('/api/setup-wizard', handleSetupWizard);
 
+// Routes (BEFORE static files)
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'landing.html'));
+});
+
+app.get('/wizard', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -21,8 +25,12 @@ app.get('/health', (req, res) => {
   res.json({ status: 'Server is running!' });
 });
 
+// Serve static files (AFTER routes)
+app.use(express.static('.'));
+
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-  console.log(`📱 Open http://localhost:3000 in your browser`);
+  console.log(`✅ Server running at http://localhost:3000`);
+  console.log(`📱 Landing page at http://localhost:3000`);
+  console.log(`📱 Wizard at http://localhost:3000/wizard`);
 });
