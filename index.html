@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Wizard - Create Your Perfect Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      gap: 8px;
+    }
+
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      border: 2px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #999;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .step-dot.completed {
+      background: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .step h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .option-card {
+      padding: 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .option-card:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .option-card.selected {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+    }
+
+    .option-card svg {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 10px;
+    }
+
+    .option-card p {
+      margin: 0;
+      font-weight: 600;
+      margin-bottom: 0;
+      color: inherit;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .checkbox-group {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-item:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .checkbox-item input {
+      width: auto;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .checkbox-item label {
+      margin: 0;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .summary-card {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    .summary-card p {
+      color: #999;
+      font-size: 12px;
+      margin: 0 0 5px 0;
+    }
+
+    .summary-card .value {
+      color: #333;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-back:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-next,
+    .btn-create {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-next:hover,
+    .btn-create:hover {
+      background: #5568d3;
+    }
+
+    .btn-next:disabled,
+    .btn-create:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 20px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .success-message h3 {
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    .success-message p {
+      color: #388e3c;
+      margin: 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f0f0f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Dashboard Wizard</h1>
+      <p>Create your perfect business dashboard in 5 minutes</p>
+    </div>
+
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-dot" id="dot-4">4</div>
+    </div>
+
+    <!-- Step 1: Business Type -->
+    <div class="step active" id="step-1">
+      <h2>What type of business are you?</h2>
+      <p>We'll customize your dashboard for your needs</p>
+      <div class="option-grid">
+        <div class="option-card" onclick="selectBusiness('saas')">
+          <p>☁️</p>
+          <p>SaaS</p>
+        </div>
+        <div class="option-card" onclick="selectBusiness('ecommerce')">
+          <p>🛒</p>
+          <p>E-commerce</p>
+        </div>
+        <div class="option-card" onclick="selectBusiness('agency')">
+          <p>💼</p>
+          <p>Agency</p>
+        </div>
+        <div class="option-card" onclick="selectBusiness('startup')">
+          <p>🚀</p>
+          <p>Startup</p>
+        </div>
+        <div class="option-card" onclick="selectBusiness('nonprofit')">
+          <p>❤️</p>
+          <p>Non-profit</p>
+        </div>
+        <div class="option-card" onclick="selectBusiness('other')">
+          <p>⚙️</p>
+          <p>Other</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Team Info -->
+    <div class="step" id="step-2">
+      <h2>Tell us about your team</h2>
+      <p>This helps us suggest relevant metrics</p>
+      
+      <div class="form-group">
+        <label>Team size</label>
+        <select id="teamSize" required>
+          <option value="">Select...</option>
+          <option value="solo">Just me</option>
+          <option value="2-5">2-5 people</option>
+          <option value="6-15">6-15 people</option>
+          <option value="16-50">16-50 people</option>
+          <option value="50+">50+ people</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Primary focus</label>
+        <select id="primaryFocus" required>
+          <option value="">Select...</option>
+          <option value="growth">Growth & marketing</option>
+          <option value="revenue">Revenue & sales</option>
+          <option value="product">Product & engineering</option>
+          <option value="operations">Operations</option>
+          <option value="customers">Customer success</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Top goal for this dashboard</label>
+        <input type="text" id="goal" placeholder="e.g., Track MRR, manage client projects..." required>
+      </div>
+    </div>
+
+    <!-- Step 3: Customize Sections -->
+    <div class="step" id="step-3">
+      <h2>Customize your dashboard</h2>
+      <p>Choose which sections you want</p>
+      
+      <div class="checkbox-group">
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-metrics" checked>
+          <label for="section-metrics">Key metrics & KPIs</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-pipeline" checked>
+          <label for="section-pipeline">Pipeline / Project tracker</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-calendar" checked>
+          <label for="section-calendar">Team calendar & scheduling</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-customers">
+          <label for="section-customers">Customer management</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-okrs">
+          <label for="section-okrs">Team OKRs</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="section-docs">
+          <label for="section-docs">Document library</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Review & Create -->
+    <div class="step" id="step-4">
+      <h2>Ready to create!</h2>
+      <p>Review your setup below</p>
+      
+      <div class="summary-card">
+        <p>Business type</p>
+        <div class="value" id="summary-business">-</div>
+      </div>
+      <div class="summary-card">
+        <p>Team size</p>
+        <div class="value" id="summary-team">-</div>
+      </div>
+      <div class="summary-card">
+        <p>Primary goal</p>
+        <div class="value" id="summary-goal">-</div>
+      </div>
+      <p style="color: #666; font-size: 14px; margin-top: 20px;">We'll generate your customized dashboard template and prepare it for Notion.</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons">
+      <button class="btn-back" id="btn-back" onclick="previousStep()" style="display: none;">← Back</button>
+      <button class="btn-next" id="btn-next" onclick="nextStep()">Next →</button>
+      <button class="btn-create" id="btn-create" onclick="createDashboard()" style="display: none;">Create Dashboard</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    let formData = {
+      businessType: '',
+      teamSize: '',
+      primaryFocus: '',
+      goal: '',
+      sections: []
+    };
+
+    function selectBusiness(type) {
+      formData.businessType = type;
+      document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      event.target.closest('.option-card').classList.add('selected');
+    }
+
+    function goToStep(step) {
+      if (step < 1 || step > 4) return;
+
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+
+      document.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        if (i + 1 < step) dot.classList.add('completed');
+        if (i + 1 === step) dot.classList.add('active');
+      });
+
+      document.getElementById('btn-back').style.display = step > 1 ? 'block' : 'none';
+      document.getElementById('btn-next').style.display = step < 4 ? 'block' : 'none';
+      document.getElementById('btn-create').style.display = step === 4 ? 'block' : 'none';
+
+      if (step === 2) {
+        if (!formData.businessType) goToStep(1);
+      }
+
+      if (step === 4) {
+        updateSummary();
+      }
+
+      currentStep = step;
+    }
+
+    function nextStep() {
+      if (currentStep === 1 && !formData.businessType) {
+        alert('Please select a business type');
+        return;
+      }
+      if (currentStep === 2) {
+        formData.teamSize = document.getElementById('teamSize').value;
+        formData.primaryFocus = document.getElementById('primaryFocus').value;
+        formData.goal = document.getElementById('goal').value;
+        if (!formData.teamSize || !formData.primaryFocus || !formData.goal) {
+          alert('Please fill in all fields');
+          return;
+        }
+      }
+      if (currentStep === 3) {
+        updateSections();
+      }
+      goToStep(currentStep + 1);
+    }
+
+    function previousStep() {
+      goToStep(currentStep - 1);
+    }
+
+    function updateSections() {
+      formData.sections = [];
+      ['metrics', 'pipeline', 'calendar', 'customers', 'okrs', 'docs'].forEach(section => {
+        if (document.getElementById(`section-${section}`).checked) {
+          formData.sections.push(section);
+        }
+      });
+    }
+
+    function updateSummary() {
+      document.getElementById('summary-business').textContent = 
+        formData.businessType.charAt(0).toUpperCase() + formData.businessType.slice(1);
+      document.getElementById('summary-team').textContent = formData.teamSize;
+      document.getElementById('summary-goal').textContent = formData.goal || 'Not specified';
+    }
+
+    async function createDashboard() {
+      updateSections();
+      
+      const btn = document.getElementById('btn-create');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const response = await fetch('/api/setup-wizard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showSuccess(data.dashboard);
+        } else {
+          alert('Error: ' + data.message);
+          btn.disabled = false;
+          btn.textContent = 'Create Dashboard';
+        }
+      } catch (error) {
+        alert('Error creating dashboard: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Create Dashboard';
+      }
+    }
+
+    function showSuccess(dashboard) {
+      const container = document.querySelector('.container');
+      container.innerHTML = `
+        <div class="success-message">
+          <h3>✓ Dashboard Created!</h3>
+          <p>${dashboard.dashboard_name} is ready</p>
+        </div>
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 6px;">
+          <h4 style="margin-bottom: 15px; color: #333;">Your Dashboard Details:</h4>
+          <p style="margin-bottom: 10px; color: #666;"><strong>Name:</strong> ${dashboard.dashboard_name}</p>
+          <p style="margin-bottom: 10px; color: #666;"><strong>Description:</strong> ${dashboard.dashboard_description}</p>
+          <p style="margin-bottom: 10px; color: #666;"><strong>Team Size:</strong> ${dashboard.team_size}</p>
+          <p style="margin-bottom: 20px; color: #666;"><strong>Focus:</strong> ${dashboard.primary_focus}</p>
+          
+          <h4 style="margin-bottom: 10px; color: #333;">Key Metrics:</h4>
+          <ul style="margin-left: 20px; color: #666;">
+            ${dashboard.key_metrics.map(m => `<li>${m.name}</li>`).join('')}
+          </ul>
+        </div>
+        <button onclick="window.location.reload()" style="width: 100%; margin-top: 20px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Start Over</button>
+      `;
+    }
+
+    goToStep(1);
+  </script>
+</body>
+</html>
