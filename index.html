@@ -3,8 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Wizard - Create Your Perfect Dashboard</title>
+  <title>Dashboard Wizard | Setup Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-1: #fff8f3;
+      --bg-2: #f3f7ff;
+      --ink: #1e2030;
+      --ink-soft: #5f6481;
+      --line: #d7d9e7;
+      --panel: rgba(255, 255, 255, 0.92);
+      --brand: #ec5d2a;
+      --brand-deep: #c84a1d;
+      --ok: #1e9f73;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --shadow: 0 24px 60px rgba(34, 24, 20, 0.16);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -12,506 +30,759 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      font-family: "Outfit", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 620px at 12% -15%, rgba(236, 93, 42, 0.22), transparent 55%),
+        radial-gradient(900px 500px at 95% 15%, rgba(18, 124, 255, 0.15), transparent 55%),
+        linear-gradient(150deg, var(--bg-1), var(--bg-2));
+      display: grid;
+      place-items: center;
+      padding: 24px 14px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      max-width: 600px;
-      width: 100%;
-      padding: 40px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(11, 45, 99, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(11, 45, 99, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+      mask-image: radial-gradient(circle at 50% 42%, black 32%, transparent 88%);
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
+    .wizard-shell {
+      width: min(920px, 100%);
+      border: 1px solid rgba(28, 47, 82, 0.22);
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      animation: rise 0.8s ease;
+      position: relative;
     }
 
-    .header h1 {
-      font-size: 32px;
-      color: #333;
+    .wizard-shell::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -30%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transform: skewX(-18deg);
+      animation: shellSweep 6.5s linear infinite;
+      pointer-events: none;
+    }
+
+    .wizard-top {
+      padding: 26px 30px 22px;
+      border-bottom: 1px solid rgba(30, 32, 48, 0.08);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.76));
+      position: relative;
+    }
+
+    .wizard-top::after {
+      content: "";
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(18, 124, 255, 0.05), rgba(18, 124, 255, 0.8), rgba(236, 93, 42, 0.7), rgba(236, 93, 42, 0.05));
+      animation: lineScan 4s linear infinite;
+    }
+
+    .kicker {
+      display: inline-block;
+      font-size: 0.79rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #2f6fce;
+      background: rgba(47, 111, 206, 0.12);
+      border: 1px solid rgba(47, 111, 206, 0.24);
+      border-radius: 999px;
+      padding: 6px 10px;
       margin-bottom: 10px;
+      font-weight: 600;
     }
 
-    .header p {
-      color: #666;
-      font-size: 16px;
+    .wizard-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.45rem, 3.2vw, 2rem);
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .wizard-subtitle {
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+      margin-bottom: 18px;
+    }
+
+    .step-track {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #e8ebf7;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .step-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(120deg, #127cff, var(--brand));
+      transition: width 0.35s ease;
     }
 
     .step-indicator {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 40px;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
     }
 
     .step-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      border: 2px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #999;
-      transition: all 0.3s ease;
+      min-height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #f7f8fd;
+      color: var(--ink-soft);
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      font-size: 0.86rem;
+      transition: all 0.25s ease;
     }
 
     .step-dot.active {
-      background: #667eea;
-      color: white;
-      border-color: #667eea;
+      border-color: rgba(18, 124, 255, 0.45);
+      color: #0d62ca;
+      background: rgba(18, 124, 255, 0.12);
     }
 
     .step-dot.completed {
-      background: #4caf50;
-      color: white;
-      border-color: #4caf50;
+      border-color: rgba(30, 159, 115, 0.3);
+      background: rgba(30, 159, 115, 0.12);
+      color: #167052;
+    }
+
+    .wizard-body {
+      padding: 28px 30px 26px;
     }
 
     .step {
       display: none;
+      animation: fade 0.22s ease;
     }
 
     .step.active {
       display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     .step h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.2rem, 2.3vw, 1.55rem);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
     }
 
-    .step p {
-      color: #666;
-      margin-bottom: 30px;
-      font-size: 14px;
+    .step p.lead {
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
     }
 
     .option-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 8px;
     }
 
     .option-card {
-      padding: 20px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 14px 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      background: white;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .option-card:hover {
-      border-color: #667eea;
-      background: #f8f9ff;
+      transform: translateY(-2px);
+      border-color: rgba(18, 124, 255, 0.5);
+      box-shadow: 0 12px 26px rgba(18, 124, 255, 0.15);
     }
 
     .option-card.selected {
-      border-color: #667eea;
-      background: #667eea;
-      color: white;
+      border-color: rgba(18, 124, 255, 0.55);
+      background: linear-gradient(130deg, rgba(18, 124, 255, 0.12), rgba(236, 93, 42, 0.14));
+      box-shadow: 0 12px 24px rgba(62, 92, 166, 0.16);
     }
 
-    .option-card svg {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 10px;
+    .option-badge {
+      display: inline-block;
+      margin-bottom: 7px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.8rem;
+      color: #2f6fce;
+      background: rgba(47, 111, 206, 0.12);
+      border-radius: 999px;
+      padding: 5px 9px;
     }
 
     .option-card p {
       margin: 0;
       font-weight: 600;
-      margin-bottom: 0;
-      color: inherit;
+      font-size: 0.96rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 14px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       font-weight: 600;
-      color: #333;
-      font-size: 14px;
+      font-size: 0.9rem;
     }
 
     .form-group input,
     .form-group select {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: border-color 0.2s ease;
+      padding: 12px 13px;
+      border-radius: 11px;
+      border: 1px solid var(--line);
+      font-family: inherit;
+      font-size: 0.93rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #fff;
+      color: var(--ink);
     }
 
     .form-group input:focus,
     .form-group select:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: rgba(18, 124, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(18, 124, 255, 0.14);
     }
 
-    .checkbox-group {
+    .checkbox-grid {
       display: grid;
-      gap: 12px;
-      margin-bottom: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
     }
 
     .checkbox-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
       display: flex;
       align-items: center;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      gap: 10px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
     }
 
     .checkbox-item:hover {
-      border-color: #667eea;
-      background: #f8f9ff;
+      border-color: rgba(18, 124, 255, 0.45);
+      background: rgba(18, 124, 255, 0.05);
     }
 
     .checkbox-item input {
-      width: auto;
-      margin-right: 12px;
-      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #127cff;
     }
 
     .checkbox-item label {
-      margin: 0;
+      font-size: 0.92rem;
+      font-weight: 500;
       cursor: pointer;
-      flex: 1;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
     }
 
     .summary-card {
-      background: #f8f9ff;
-      border-left: 4px solid #667eea;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 13px;
     }
 
     .summary-card p {
-      color: #999;
-      font-size: 12px;
-      margin: 0 0 5px 0;
+      margin-bottom: 6px;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .summary-card .value {
-      color: #333;
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .help-text {
+      margin-top: 16px;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
     }
 
     .buttons {
+      margin-top: 22px;
       display: flex;
-      gap: 12px;
-      margin-top: 40px;
+      gap: 10px;
     }
 
     button {
-      flex: 1;
-      padding: 14px;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 11px;
+      padding: 12px 14px;
+      font-family: inherit;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.94rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::after {
+      content: "";
+      position: absolute;
+      inset: -2px auto -2px -120%;
+      width: 52%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: skewX(-20deg);
+      transition: transform 0.45s ease;
+    }
+
+    button:hover::after {
+      transform: translateX(280%) skewX(-20deg);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .btn-back {
-      background: #f0f0f0;
-      color: #333;
+      background: #f0f2f8;
+      color: #2b304a;
+      border: 1px solid var(--line);
     }
 
     .btn-back:hover {
-      background: #e0e0e0;
+      transform: translateY(-1px);
+      background: #e8ebf5;
     }
 
     .btn-next,
     .btn-create {
-      background: #667eea;
-      color: white;
+      margin-left: auto;
+      background: linear-gradient(125deg, #0d5ed6, #2187ff 45%, #ec5d2a 110%);
+      color: #fff;
+      min-width: 140px;
+      box-shadow: 0 12px 28px rgba(28, 98, 221, 0.28);
+      animation: buttonGlow 3.4s ease-in-out infinite;
     }
 
     .btn-next:hover,
     .btn-create:hover {
-      background: #5568d3;
-    }
-
-    .btn-next:disabled,
-    .btn-create:disabled {
-      background: #ccc;
-      cursor: not-allowed;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(26, 88, 197, 0.36);
     }
 
     .success-message {
-      background: #e8f5e9;
-      border-left: 4px solid #4caf50;
-      padding: 20px;
-      border-radius: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 159, 115, 0.3);
+      background: rgba(30, 159, 115, 0.12);
+      color: #15583f;
+      padding: 18px;
       text-align: center;
+      margin-bottom: 14px;
     }
 
     .success-message h3 {
-      color: #2e7d32;
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .result-panel {
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 18px;
+    }
+
+    .result-panel h4 {
       margin-bottom: 10px;
+      font-size: 1.02rem;
     }
 
-    .success-message p {
-      color: #388e3c;
-      margin: 0;
+    .result-panel p {
+      margin-bottom: 9px;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
     }
 
-    .loading {
+    .result-panel strong {
+      color: var(--ink);
+    }
+
+    .result-panel ul,
+    .result-panel ol {
+      margin: 4px 0 14px 20px;
+      color: var(--ink-soft);
+    }
+
+    .result-panel li {
+      margin-bottom: 5px;
+      font-size: 0.92rem;
+    }
+
+    .new-dashboard {
+      width: 100%;
+      margin-top: 16px;
+      background: #127cff;
+      color: #fff;
+    }
+
+    .new-dashboard:hover {
+      background: #0d67d3;
+      transform: translateY(-1px);
+    }
+
+    .helper {
+      color: #7a809d;
+      font-size: 0.84rem;
+      margin-top: 10px;
       text-align: center;
-      padding: 40px;
     }
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f0f0f0;
-      border-top-color: #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes buttonGlow {
+      0%, 100% { box-shadow: 0 12px 28px rgba(28, 98, 221, 0.28); }
+      50% { box-shadow: 0 15px 30px rgba(28, 98, 221, 0.36); }
+    }
+
+    @keyframes shellSweep {
+      from { transform: translateX(-10%) skewX(-18deg); opacity: 0; }
+      18% { opacity: 0.65; }
+      36% { opacity: 0; }
+      to { transform: translateX(320%) skewX(-18deg); opacity: 0; }
+    }
+
+    @keyframes lineScan {
+      from { filter: hue-rotate(0deg); opacity: 0.85; }
+      50% { opacity: 1; }
+      to { filter: hue-rotate(20deg); opacity: 0.85; }
+    }
+
+    @media (max-width: 700px) {
+      .wizard-top,
+      .wizard-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .step-indicator {
+        gap: 6px;
+      }
+
+      .step-dot {
+        font-size: 0.77rem;
+        min-height: 32px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .buttons {
+        gap: 8px;
+      }
+
+      .btn-next,
+      .btn-create {
+        min-width: 120px;
+        animation: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Dashboard Wizard</h1>
-      <p>Create your perfect business dashboard in 5 minutes</p>
-    </div>
-
-    <div class="step-indicator">
-      <div class="step-dot active" id="dot-1">1</div>
-      <div class="step-dot" id="dot-2">2</div>
-      <div class="step-dot" id="dot-3">3</div>
-      <div class="step-dot" id="dot-4">4</div>
-    </div>
-
-    <!-- Step 1: Business Type -->
-    <div class="step active" id="step-1">
-      <h2>What type of business are you?</h2>
-      <p>We'll customize your dashboard for your needs</p>
-      <div class="option-grid">
-        <div class="option-card" onclick="selectBusiness('saas')">
-          <p>☁️</p>
-          <p>SaaS</p>
-        </div>
-        <div class="option-card" onclick="selectBusiness('ecommerce')">
-          <p>🛒</p>
-          <p>E-commerce</p>
-        </div>
-        <div class="option-card" onclick="selectBusiness('agency')">
-          <p>💼</p>
-          <p>Agency</p>
-        </div>
-        <div class="option-card" onclick="selectBusiness('startup')">
-          <p>🚀</p>
-          <p>Startup</p>
-        </div>
-        <div class="option-card" onclick="selectBusiness('nonprofit')">
-          <p>❤️</p>
-          <p>Non-profit</p>
-        </div>
-        <div class="option-card" onclick="selectBusiness('other')">
-          <p>⚙️</p>
-          <p>Other</p>
-        </div>
+  <div class="wizard-shell">
+    <div class="wizard-top">
+      <span class="kicker">Dashboard Setup</span>
+      <h1 class="wizard-title">Build your custom dashboard in four steps</h1>
+      <p class="wizard-subtitle">Answer a few focused questions and we will generate a practical dashboard structure for your team.</p>
+      <div class="step-track"><div class="step-fill" id="step-fill"></div></div>
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-1">Business</div>
+        <div class="step-dot" id="dot-2">Team</div>
+        <div class="step-dot" id="dot-3">Sections</div>
+        <div class="step-dot" id="dot-4">Review</div>
       </div>
     </div>
 
-    <!-- Step 2: Team Info -->
-    <div class="step" id="step-2">
-      <h2>Tell us about your team</h2>
-      <p>This helps us suggest relevant metrics</p>
-      
-      <div class="form-group">
-        <label>Team size</label>
-        <select id="teamSize" required>
-          <option value="">Select...</option>
-          <option value="solo">Just me</option>
-          <option value="2-5">2-5 people</option>
-          <option value="6-15">6-15 people</option>
-          <option value="16-50">16-50 people</option>
-          <option value="50+">50+ people</option>
-        </select>
+    <div class="wizard-body">
+      <div class="step active" id="step-1">
+        <h2>What type of business are you running?</h2>
+        <p class="lead">We tune your starter layout around this selection.</p>
+        <div class="option-grid">
+          <div class="option-card" onclick="selectBusiness('saas', this)">
+            <span class="option-badge">B2B</span>
+            <p>SaaS</p>
+          </div>
+          <div class="option-card" onclick="selectBusiness('ecommerce', this)">
+            <span class="option-badge">DTC</span>
+            <p>E-commerce</p>
+          </div>
+          <div class="option-card" onclick="selectBusiness('agency', this)">
+            <span class="option-badge">Services</span>
+            <p>Agency</p>
+          </div>
+          <div class="option-card" onclick="selectBusiness('startup', this)">
+            <span class="option-badge">Early Stage</span>
+            <p>Startup</p>
+          </div>
+          <div class="option-card" onclick="selectBusiness('nonprofit', this)">
+            <span class="option-badge">Impact</span>
+            <p>Non-profit</p>
+          </div>
+          <div class="option-card" onclick="selectBusiness('other', this)">
+            <span class="option-badge">Flexible</span>
+            <p>Other</p>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>Primary focus</label>
-        <select id="primaryFocus" required>
-          <option value="">Select...</option>
-          <option value="growth">Growth & marketing</option>
-          <option value="revenue">Revenue & sales</option>
-          <option value="product">Product & engineering</option>
-          <option value="operations">Operations</option>
-          <option value="customers">Customer success</option>
-        </select>
+      <div class="step" id="step-2">
+        <h2>Tell us about your team</h2>
+        <p class="lead">This helps us recommend the right performance views.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="teamSize">Team size</label>
+            <select id="teamSize" required>
+              <option value="">Select...</option>
+              <option value="solo">Just me</option>
+              <option value="2-5">2-5 people</option>
+              <option value="6-15">6-15 people</option>
+              <option value="16-50">16-50 people</option>
+              <option value="50+">50+ people</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="primaryFocus">Primary focus</label>
+            <select id="primaryFocus" required>
+              <option value="">Select...</option>
+              <option value="growth">Growth and marketing</option>
+              <option value="revenue">Revenue and sales</option>
+              <option value="product">Product and engineering</option>
+              <option value="operations">Operations</option>
+              <option value="customers">Customer success</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label for="goal">Top goal for this dashboard</label>
+            <input type="text" id="goal" placeholder="Example: Track MRR and delivery pipeline" required>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>Top goal for this dashboard</label>
-        <input type="text" id="goal" placeholder="e.g., Track MRR, manage client projects..." required>
+      <div class="step" id="step-3">
+        <h2>Choose dashboard sections</h2>
+        <p class="lead">Pick the modules your team needs on day one.</p>
+        <div class="checkbox-grid">
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-metrics" checked>
+            <label for="section-metrics">Key metrics and KPIs</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-pipeline" checked>
+            <label for="section-pipeline">Pipeline or project tracker</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-calendar" checked>
+            <label for="section-calendar">Team calendar and scheduling</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-customers">
+            <label for="section-customers">Customer management</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-okrs">
+            <label for="section-okrs">Team OKRs</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="section-docs">
+            <label for="section-docs">Document library</label>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Step 3: Customize Sections -->
-    <div class="step" id="step-3">
-      <h2>Customize your dashboard</h2>
-      <p>Choose which sections you want</p>
-      
-      <div class="checkbox-group">
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-metrics" checked>
-          <label for="section-metrics">Key metrics & KPIs</label>
+      <div class="step" id="step-4">
+        <h2>Review before creating</h2>
+        <p class="lead">Confirm your setup and generate the dashboard blueprint.</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <p>Business Type</p>
+            <div class="value" id="summary-business">-</div>
+          </div>
+          <div class="summary-card">
+            <p>Team Size</p>
+            <div class="value" id="summary-team">-</div>
+          </div>
+          <div class="summary-card">
+            <p>Primary Goal</p>
+            <div class="value" id="summary-goal">-</div>
+          </div>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-pipeline" checked>
-          <label for="section-pipeline">Pipeline / Project tracker</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-calendar" checked>
-          <label for="section-calendar">Team calendar & scheduling</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-customers">
-          <label for="section-customers">Customer management</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-okrs">
-          <label for="section-okrs">Team OKRs</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="section-docs">
-          <label for="section-docs">Document library</label>
-        </div>
+        <p class="help-text">We generate your dashboard structure and setup guide for Notion.</p>
       </div>
-    </div>
 
-    <!-- Step 4: Review & Create -->
-    <div class="step" id="step-4">
-      <h2>Ready to create!</h2>
-      <p>Review your setup below</p>
-      
-      <div class="summary-card">
-        <p>Business type</p>
-        <div class="value" id="summary-business">-</div>
+      <div class="buttons">
+        <button class="btn-back" id="btn-back" onclick="previousStep()" style="display: none;">Back</button>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">Next</button>
+        <button class="btn-create" id="btn-create" onclick="createDashboard()" style="display: none;">Create Dashboard</button>
       </div>
-      <div class="summary-card">
-        <p>Team size</p>
-        <div class="value" id="summary-team">-</div>
-      </div>
-      <div class="summary-card">
-        <p>Primary goal</p>
-        <div class="value" id="summary-goal">-</div>
-      </div>
-      <p style="color: #666; font-size: 14px; margin-top: 20px;">We'll generate your customized dashboard template and prepare it for Notion.</p>
-    </div>
-
-    <!-- Buttons -->
-    <div class="buttons">
-      <button class="btn-back" id="btn-back" onclick="previousStep()" style="display: none;">← Back</button>
-      <button class="btn-next" id="btn-next" onclick="nextStep()">Next →</button>
-      <button class="btn-create" id="btn-create" onclick="createDashboard()" style="display: none;">Create Dashboard</button>
     </div>
   </div>
 
   <script>
     let currentStep = 1;
     let formData = {
-      businessType: '',
-      teamSize: '',
-      primaryFocus: '',
-      goal: '',
+      businessType: "",
+      teamSize: "",
+      primaryFocus: "",
+      goal: "",
       sections: []
     };
 
-    function selectBusiness(type) {
+    function formatBusinessType(value) {
+      if (!value) return "-";
+      const labels = {
+        saas: "SaaS",
+        ecommerce: "E-commerce",
+        agency: "Agency",
+        startup: "Startup",
+        nonprofit: "Non-profit",
+        other: "Other"
+      };
+      return labels[value] || value;
+    }
+
+    function updateProgress(step) {
+      const percentage = (step / 4) * 100;
+      document.getElementById("step-fill").style.width = percentage + "%";
+    }
+
+    function selectBusiness(type, element) {
       formData.businessType = type;
-      document.querySelectorAll('.option-card').forEach(card => {
-        card.classList.remove('selected');
+      document.querySelectorAll(".option-card").forEach((card) => {
+        card.classList.remove("selected");
       });
-      event.target.closest('.option-card').classList.add('selected');
+      element.classList.add("selected");
     }
 
     function goToStep(step) {
       if (step < 1 || step > 4) return;
 
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById(`step-${step}`).classList.add('active');
+      document.querySelectorAll(".step").forEach((stepElement) => {
+        stepElement.classList.remove("active");
+      });
+      document.getElementById(`step-${step}`).classList.add("active");
 
-      document.querySelectorAll('.step-dot').forEach((dot, i) => {
-        dot.classList.remove('active', 'completed');
-        if (i + 1 < step) dot.classList.add('completed');
-        if (i + 1 === step) dot.classList.add('active');
+      document.querySelectorAll(".step-dot").forEach((dot, index) => {
+        dot.classList.remove("active", "completed");
+        if (index + 1 < step) dot.classList.add("completed");
+        if (index + 1 === step) dot.classList.add("active");
       });
 
-      document.getElementById('btn-back').style.display = step > 1 ? 'block' : 'none';
-      document.getElementById('btn-next').style.display = step < 4 ? 'block' : 'none';
-      document.getElementById('btn-create').style.display = step === 4 ? 'block' : 'none';
+      document.getElementById("btn-back").style.display = step > 1 ? "inline-block" : "none";
+      document.getElementById("btn-next").style.display = step < 4 ? "inline-block" : "none";
+      document.getElementById("btn-create").style.display = step === 4 ? "inline-block" : "none";
 
-      if (step === 2) {
-        if (!formData.businessType) goToStep(1);
+      if (step === 2 && !formData.businessType) {
+        goToStep(1);
+        return;
       }
 
-      if (step === 4) {
-        updateSummary();
-      }
+      if (step === 4) updateSummary();
 
+      updateProgress(step);
       currentStep = step;
     }
 
     function nextStep() {
       if (currentStep === 1 && !formData.businessType) {
-        alert('Please select a business type');
+        alert("Please select a business type.");
         return;
       }
+
       if (currentStep === 2) {
-        formData.teamSize = document.getElementById('teamSize').value;
-        formData.primaryFocus = document.getElementById('primaryFocus').value;
-        formData.goal = document.getElementById('goal').value;
+        formData.teamSize = document.getElementById("teamSize").value;
+        formData.primaryFocus = document.getElementById("primaryFocus").value;
+        formData.goal = document.getElementById("goal").value.trim();
         if (!formData.teamSize || !formData.primaryFocus || !formData.goal) {
-          alert('Please fill in all fields');
+          alert("Please fill in all fields.");
           return;
         }
       }
-      if (currentStep === 3) {
-        updateSections();
-      }
+
+      if (currentStep === 3) updateSections();
+
       goToStep(currentStep + 1);
     }
 
@@ -521,7 +792,7 @@
 
     function updateSections() {
       formData.sections = [];
-      ['metrics', 'pipeline', 'calendar', 'customers', 'okrs', 'docs'].forEach(section => {
+      ["metrics", "pipeline", "calendar", "customers", "okrs", "docs"].forEach((section) => {
         if (document.getElementById(`section-${section}`).checked) {
           formData.sections.push(section);
         }
@@ -529,74 +800,79 @@
     }
 
     function updateSummary() {
-      document.getElementById('summary-business').textContent = 
-        formData.businessType.charAt(0).toUpperCase() + formData.businessType.slice(1);
-      document.getElementById('summary-team').textContent = formData.teamSize;
-      document.getElementById('summary-goal').textContent = formData.goal || 'Not specified';
+      document.getElementById("summary-business").textContent = formatBusinessType(formData.businessType);
+      document.getElementById("summary-team").textContent = formData.teamSize || "-";
+      document.getElementById("summary-goal").textContent = formData.goal || "-";
     }
 
     async function createDashboard() {
-  updateSections();
-  
-  const btn = document.getElementById('btn-create');
-  btn.disabled = true;
-  btn.textContent = 'Creating...';
+      updateSections();
+      const button = document.getElementById("btn-create");
+      button.disabled = true;
+      button.textContent = "Creating...";
 
-  try {
-    // Generate dashboard content
-    const response = await fetch('/api/setup-wizard', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
+      try {
+        const response = await fetch("/api/setup-wizard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        });
 
-    const data = await response.json();
+        const data = await response.json();
+        if (data.success) {
+          showSuccess(data.dashboard);
+          return;
+        }
 
-    if (data.success) {
-      showSuccess(data.dashboard);
-    } else {
-      alert('Error: ' + data.message);
-      btn.disabled = false;
-      btn.textContent = 'Create Dashboard';
+        alert("Error: " + (data.message || "Something went wrong."));
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+
+      button.disabled = false;
+      button.textContent = "Create Dashboard";
     }
-  } catch (error) {
-    alert('Error: ' + error.message);
-    btn.disabled = false;
-    btn.textContent = 'Create Dashboard';
-  }
-}
 
-   function showSuccess(dashboard) {
-  const container = document.querySelector('.container');
-  container.innerHTML = `
-    <div class="success-message">
-      <h3>✓ Dashboard Created!</h3>
-      <p>${dashboard.dashboard_name} is ready</p>
-    </div>
-    <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 6px;">
-      <h4 style="margin-bottom: 15px; color: #333;">Your Dashboard Details:</h4>
-      <p style="margin-bottom: 10px; color: #666;"><strong>Name:</strong> ${dashboard.dashboard_name}</p>
-      <p style="margin-bottom: 10px; color: #666;"><strong>Description:</strong> ${dashboard.dashboard_description}</p>
-      <p style="margin-bottom: 10px; color: #666;"><strong>Team Size:</strong> ${dashboard.team_size}</p>
-      <p style="margin-bottom: 20px; color: #666;"><strong>Focus:</strong> ${dashboard.primary_focus}</p>
-      
-      <h4 style="margin-bottom: 10px; color: #333;">Key Metrics:</h4>
-      <ul style="margin-left: 20px; color: #666;">
-        ${dashboard.key_metrics.map(m => `<li>${m.name}</li>`).join('')}
-      </ul>
-      
-      <h4 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Quick Start Guide:</h4>
-      <ol style="margin-left: 20px; color: #666;">
-        ${dashboard.quick_start_guide.map(step => `<li>${step}</li>`).join('')}
-      </ol>
-      
-      <p style="margin-top: 20px; color: #999; font-size: 14px;">
-        📧 Check your email for your complete dashboard template guide!
-      </p>
-    </div>
-    <button onclick="window.location.reload()" style="width: 100%; margin-top: 20px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Create Another Dashboard</button>
-  `;
-}
+    function showSuccess(dashboard) {
+      const container = document.querySelector(".wizard-body");
+      const template = dashboard.notion_template || {};
+      const templateSections = template.sections || [];
+      const sectionCards = templateSections.map((section) => `
+        <li>
+          <strong>${section.title}</strong> - ${section.purpose}
+          <br>
+          Views: ${section.starter_views.join(", ")}
+        </li>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="success-message">
+          <h3>Dashboard Created</h3>
+          <p>${dashboard.dashboard_name} is ready with a full Notion operating structure.</p>
+        </div>
+        <div class="result-panel">
+          <h4>Your Dashboard Blueprint</h4>
+          <p><strong>Name:</strong> ${dashboard.dashboard_name}</p>
+          <p><strong>Description:</strong> ${dashboard.dashboard_description}</p>
+          <p><strong>Team Size:</strong> ${dashboard.team_size}</p>
+          <p><strong>Focus:</strong> ${dashboard.primary_focus}</p>
+          <h4>Hero Metrics</h4>
+          <ul>${dashboard.key_metrics.map((metric) => `<li>${metric.name}</li>`).join("")}</ul>
+          <h4>Engaging Notion Sections</h4>
+          <ul>${sectionCards}</ul>
+          <h4>First Week Missions</h4>
+          <ol>${(dashboard.first_week_missions || []).map((step) => `<li>${step}</li>`).join("")}</ol>
+          <h4>Team Rituals</h4>
+          <ul>${(dashboard.team_rituals || []).map((ritual) => `<li>${ritual}</li>`).join("")}</ul>
+          <h4>Engagement Hooks</h4>
+          <ul>${(dashboard.engagement_hooks || []).map((hook) => `<li>${hook}</li>`).join("")}</ul>
+          <h4>Quick Start Guide</h4>
+          <ol>${dashboard.quick_start_guide.map((step) => `<li>${step}</li>`).join("")}</ol>
+        </div>
+        <button onclick="window.location.reload()" class="new-dashboard">Create Another Dashboard</button>
+        <p class="helper">Rerun the wizard with a new goal to generate a different operating style.</p>
+      `;
+    }
 
     goToStep(1);
   </script>
